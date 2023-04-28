@@ -35,4 +35,28 @@ public interface ICellNetwork {
 
         return (int) Math.round(distance);
     }
+
+
+    /**
+     * Generates vertex in graph for each cell tower in dataset
+     */
+    public void generateVertices();
+
+
+    /**
+     * Calculate distance between each cell tower in graph
+     */
+    public void generateTowerConnections();
+
+
+    /**
+     * Cost function to adjust distance between two cell towers by squaring distance between towers
+     * An additional penalty is applied if:
+     *  - cell towers owned by different providers try to connect
+     *  - cell towers are > 100 miles apart (no connection possible in this case)
+     *
+     * @return adjusted cost
+     */
+    public int computePenalty();
+
 }
