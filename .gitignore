@@ -9,5 +9,6 @@
 # User configuration files
 **/.idea
 **/out
+/*.iml
 # Misc
 .DS_Store
