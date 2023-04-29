@@ -114,7 +114,7 @@ public class CellTower implements ICellTower {
     public String toString() {
         String out = null;
         
-        out = "\t∆\t \n" + id + ": " + city + "," + state ;
+        out = "\t∆\t \n" + id + ": " + city + ", " + state ;
         
         return out;
         
