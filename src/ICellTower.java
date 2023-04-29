@@ -3,5 +3,8 @@
  */
 
 public interface ICellTower {
-
+    
+    @Override
+    String toString();
+    
 }
