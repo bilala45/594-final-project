@@ -30,11 +30,24 @@ public class CellNetwork implements ICellNetwork {
     }
 
 
+    // initialize graph object
+    public void networkInit() {
+        // assign vertices to graph
+        assignVertices();
+        // assign edges to graph
+        generateTowerConnections();
+    }
+
+
     // getter for cellNetworkGraph
     public Graph getCellNetworkGraph() {
         return cellNetworkGraph;
     }
 
+    // getter for IdToVertexMap
+    public Map<Integer, Integer> getIdToVertexMap() {
+        return IdToVertexMap;
+    }
 
     /**
      * Assigns each cell tower in dataset to vertex in graph
@@ -94,8 +107,8 @@ public class CellNetwork implements ICellNetwork {
         // calculate distance between towers
         int edgeWt = ICellNetwork.computeNauticalMiles(tower1, tower2);
 
-        // cube distance calculated to penalize cell towers that are further apart
-        edgeWt = (int) Math.pow(edgeWt, 3);
+        // square distance calculated to penalize cell towers that are further apart
+        edgeWt = (int) Math.pow(edgeWt, 2);
 
         // add penalty to distance if cell towers are licensed to different providers
         if (!tower1.getLicense().equals(tower2.getLicense())) {
