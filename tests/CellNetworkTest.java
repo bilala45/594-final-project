@@ -14,6 +14,7 @@ public class CellNetworkTest {
     public void setUp() {
         // processor should be initialized with atlantic test dataset
         Processor processor = new Processor();
+        processor.readCSVFile("./atlantic-test-data.csv");
         cellNetwork = new CellNetwork(processor);
     }
 

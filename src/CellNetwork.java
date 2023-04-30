@@ -21,13 +21,10 @@ public class CellNetwork implements ICellNetwork {
     public CellNetwork(Processor processor) {
         // initialize graph object
         cellNetworkGraph = new GraphM();
-
         // initialize field that maps a cell tower's id to graph vertex
         IdToVertexMap = new HashMap<>();
-
-        // TODO add line to get map from processor object
-        // IdToCellTower = processor.getCellTowerMap();
-
+        // get map from processor object
+        IdToCellTowerMap = processor.getTowerList();
         // Initialize graph with number of vertices matching the number of cell towers
         cellNetworkGraph.init(IdToCellTowerMap.size());
     }
