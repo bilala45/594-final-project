@@ -10,15 +10,20 @@ public interface ICellNetwork {
     public static final double RADIUS = 3440.069;
 
     /**
-     * Computes the distance between two locations in nautical miles using the Haversine formula
+     * Computes the distance between two cell towers in nautical miles using the Haversine formula
      *
-     * @param lat1 latitude of location 1
-     * @param long1 longitude of location 1
-     * @param lat2 latitude of location 2
-     * @param long2 longitude of location 2
-     * @return distance between locations 1 and 2 in nautical miles
+     * @param tower1 cell tower 1
+     * @param tower2 cell tower 2
+     * @return distance between towers 1 and 2 in nautical miles
      */
-    public static int computeNauticalMiles(double lat1, double long1, double lat2, double long2) {
+    public static int computeNauticalMiles(CellTower tower1, CellTower tower2) {
+        // get latitude and longitude of towers 1 and 2
+        double lat1 = tower1.getLat();
+        double long1 = tower1.getLong();
+        double lat2 = tower2.getLat();
+        double long2 = tower2.getLong();
+
+        // compute difference between latitude and longitudes of each tower
         double deltaLat = Math.toRadians(lat2 - lat1);
         double deltaLong = Math.toRadians(long2 - long1);
 
@@ -38,9 +43,9 @@ public interface ICellNetwork {
 
 
     /**
-     * Generates vertex in graph for each cell tower in dataset
+     * Assigns each cell tower in dataset to vertex in graph
      */
-    public void generateVertices();
+    public void assignVertices();
 
 
     /**
@@ -52,11 +57,10 @@ public interface ICellNetwork {
     /**
      * Cost function to adjust distance between two cell towers by squaring distance between towers
      * An additional penalty is applied if:
-     *  - cell towers owned by different providers try to connect
-     *  - cell towers are > 100 miles apart (no connection possible in this case)
+     * - cell towers owned by different providers try to connect
+     * - cell towers are > 100 miles apart (no connection possible in this case)
      *
      * @return adjusted cost
      */
-    public int computePenalty();
-
+    public int computeEdgeWeight(CellTower tower1, CellTower tower2);
 }
