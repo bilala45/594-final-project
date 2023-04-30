@@ -3,4 +3,5 @@
  */
 
 public interface IPath {
+    public static final int INFINITY = Integer.MAX_VALUE;
 }
