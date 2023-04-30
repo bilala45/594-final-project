@@ -17,8 +17,22 @@ public class CellTower implements ICellTower {
     /**
      * ctor
      */
-    public CellTower(String licensee, int towerID, String ad, String cty, String county, 
-            String st, double latDeg, double longDeg) {
+    public CellTower() {
+        setId(0);
+        setLicense(null);
+        setAddress(null);
+        
+        setCity(null);
+        setCounty(null);
+        setLat(0);
+        
+        setLong(0);
+        setState(null);
+        
+    }
+    
+    public CellTower(int towerID, double latDeg, double longDeg, String licensee, String ad, String cty, String county, 
+            String st) {
        
         setId(towerID);
         setLicense(licensee);
@@ -114,7 +128,7 @@ public class CellTower implements ICellTower {
     public String toString() {
         String out = null;
         
-        out = "\t∆\t \n" + id + ": " + city + ", " + state ;
+        out =  id + ": " + county +"," + city + ", " + state + " located at: (" + latitude + ","  + longitude + ")" + "\n";
         
         return out;
         
