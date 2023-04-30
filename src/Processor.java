@@ -17,11 +17,15 @@ public class Processor implements IProcessor {
                 // Split the line into fields using comma as the delimiter
                 String[] fields = line.split(",");
                 System.out.println(line);
-                CellTower tower = new CellTower(Integer.parseInt(fields[0]), 
-                        Double.valueOf(fields[6]), Double.valueOf(fields[7]), fields[1], fields[2], 
+                int id = Integer.parseInt(fields[0]);
+                double lat = Double.valueOf(fields[6]);
+                double longt = Double.valueOf(fields[7]);
+                
+                CellTower tower = new CellTower(id, 
+                        lat, longt, fields[1], fields[2], 
                        fields[3], fields[4], fields[5]);
                System.out.print(tower);
-                this.idToTower.put(tower.getId(), tower);
+               this.idToTower.put(tower.getId(), tower);
                 
                 
                 
@@ -38,7 +42,7 @@ public class Processor implements IProcessor {
                 } else {
                     System.out.println("Character not found in the string.");
                 }
-                
+//                
 
 //                //Process each field here
 //                for (String field : fields) {
@@ -58,7 +62,9 @@ public class Processor implements IProcessor {
     
     
     public static void main(String[] args) {
-        String csvFilePath = "celltowers_small.csv";
+        //String csvFilePath = "celltowers_small.csv";
+        String csvFilePath = "Northeast_dataset.csv";
+
         Processor p = new Processor();
         p.readCSVFile(csvFilePath);
         System.out.println(p.getTowerList().toString());
