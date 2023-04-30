@@ -56,4 +56,24 @@ public class Person implements IPerson {
         this.name = name;
     }
     
+    /**
+     * private boolean hasTower(QT) {
+     * 
+     * fir
+     * 
+     * create some sort of function to check which fourth the lat and long are in
+     * 
+     * based on that pick the child, repeat until we are at a leaf - if leaf empty no cell tower
+     * 
+     * - check some distance heuristic (bool for lat and long in quad class?)
+     * 
+     * - if leaf has cell tower:
+     *  - check if tower matches provider
+     *      - if yes and matches distances h then return true
+     *      
+     *  - if no check the other children
+        
+    }
+     */
+    
 }
