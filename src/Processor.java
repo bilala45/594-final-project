@@ -2,6 +2,8 @@ import java.util.*;
 import java.io.*;
 public class Processor implements IProcessor {
     private Map<Integer, CellTower> idToTower = new HashMap<>();
+    private List<CellTower> cellTowers = new ArrayList<>();
+
     
    
     public Processor(){}
@@ -16,7 +18,7 @@ public class Processor implements IProcessor {
             while ((line = bufferedReader.readLine()) != null) {
                 // Split the line into fields using comma as the delimiter
                 String[] fields = line.split(",");
-                // System.out.println(line);
+                //System.out.println(line);
                 int id = Integer.parseInt(fields[0]);
                 double lat = Double.valueOf(fields[6]);
                 double longt = Double.valueOf(fields[7]);
@@ -24,12 +26,14 @@ public class Processor implements IProcessor {
                 CellTower tower = new CellTower(id, 
                         lat, longt, fields[1], fields[2], 
                        fields[3], fields[4], fields[5]);
-               // System.out.print(tower);
+               //System.out.print(tower);
+               this.cellTowers.add(tower);
                this.idToTower.put(tower.getId(), tower);
+
                 
                 
                 
-//                //Extra processing for Zip-Code if needed
+                //Extra processing for Zip-Code if needed
 //                String inputString = fields[2];
 //                int index = inputString.indexOf('(');
 //
@@ -56,21 +60,25 @@ public class Processor implements IProcessor {
         }
     }
     
-    public Map<Integer, CellTower> getTowerList(){
+    public Map<Integer, CellTower> getTowerMap(){
         return this.idToTower;
     }
     
+    public List<CellTower> getTowerList(){
+        return this.cellTowers;
+    }
     
-//    public static void main(String[] args) {
-//        //String csvFilePath = "celltowers_small.csv";
+    
+    public static void main(String[] args) {
+        //String csvFilePath = "celltowers_small.csv";
 //        String csvFilePath = "Northeast_dataset.csv";
 //
 //        Processor p = new Processor();
 //        p.readCSVFile(csvFilePath);
 //        System.out.println(p.getTowerList().toString());
-//
-//
-//    }
+        
+        
+    }
     
 }
 

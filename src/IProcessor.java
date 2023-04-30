@@ -15,7 +15,8 @@ interface IProcessor {
      * @return Map<Integer, CellTower>
      */
     
-    public Map<Integer, CellTower> getTowerList();
+    public Map<Integer, CellTower> getTowerMap();
+    public List<CellTower> getTowerList();
 
 
 }
