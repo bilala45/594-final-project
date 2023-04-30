@@ -110,4 +110,8 @@ public class GraphM implements Graph
                 temp[count++] = i;
         return temp;
     }
+
+    public int[][] getMatrix() {
+        return matrix;
+    }
 }
