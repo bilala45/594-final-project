@@ -19,22 +19,20 @@ public class CellNetwork implements ICellNetwork {
      * Constructor
      */
     public CellNetwork(Processor processor) {
-        // initialize graph object
-        cellNetworkGraph = new GraphM();
-        // initialize field that maps a cell tower's id to graph vertex
-        IdToVertexMap = new HashMap<>();
         // get map from processor object
         IdToCellTowerMap = processor.getTowerMap();
+
+        // initialize field mapping cell tower id to vertex in graph
+        IdToVertexMap = new HashMap<>();
+
         // Initialize graph with number of vertices matching the number of cell towers
+        cellNetworkGraph = new GraphM();
         cellNetworkGraph.init(IdToCellTowerMap.size());
-    }
 
-
-    // initialize graph object
-    public void networkInit() {
         // assign vertices to graph
         assignVertices();
-        // assign edges to graph
+
+        // create edges in graph
         generateTowerConnections();
     }
 
@@ -48,6 +46,7 @@ public class CellNetwork implements ICellNetwork {
     public Map<Integer, Integer> getIdToVertexMap() {
         return IdToVertexMap;
     }
+
 
     /**
      * Assigns each cell tower in dataset to vertex in graph

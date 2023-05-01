@@ -3,7 +3,7 @@ import java.util.List;
 
 public class CellularRegion implements ICellularRegion {
 
-    // top left and bottom right coordinates of cellular region
+    // top left and bottom right coordinates of a cellular region
     private Coordinate topLeft;
     private Coordinate botRight;
 
@@ -21,35 +21,25 @@ public class CellularRegion implements ICellularRegion {
 
 
     /**
-     * No argument constructor for testing purposes
-     */
-    public CellularRegion() {
-        // set top left and bot right fields for region
-        this.topLeft = new Coordinate(0,0);
-        this.botRight = new Coordinate(0, 0);
-    }
-
-
-    /**
-     * Create a new cellular region object.
-     * @param topLeft   top left coordinate of region
-     * @param botRight   bottom right coordinate of region
+     * Create a new cellular region object
+     * @param topLeft top left coordinate of region
+     * @param botRight bottom right coordinate of region
      * @param parent of this region
      */
     public CellularRegion(Coordinate topLeft, Coordinate botRight, CellularRegion parent) {
-        // initialize top left and bottom right Points to input top left and bottom right points
+        // initialize top left and bottom right coordinates to topLeft and botRight arguments
         this.topLeft = topLeft;
         this.botRight = botRight;
 
         // initialize parent to parent arg
         this.parent = parent;
 
-        // empty list to store towers
+        // initialize empty list to store towers
         towersInRegion = new ArrayList<>();
     }
 
 
-    // Getters for each child
+    // getters for this region's coordinates
     public Coordinate getTopLeft() {
         return topLeft;
     }
@@ -58,6 +48,8 @@ public class CellularRegion implements ICellularRegion {
         return botRight;
     }
 
+
+    // Getters for each sub-region of this region
     public ICellularRegion getTopLeftSq() {
         return topLeftSq;
     }
@@ -76,37 +68,58 @@ public class CellularRegion implements ICellularRegion {
 
 
     /**
-     * Divide this cellular region into 4 sub-regions
+     * Get list of towers in region
+     * @return list of towers
      */
     @Override
-    public void subDivide() {
-        // smash if this block's depth is less than maxDepth and block being smashed is a leaf
-        if (towersInRegion.size() > 1) {
-            // get center coordinate
-            Coordinate center = computeCenter(topLeft, botRight);
-
-            // create 4 new Block objects with updated coordinates and random colors
-            topLeftSq = new CellularRegion(topLeft, center, this);
-            topRightSq = new CellularRegion(new Coordinate(center.getLatitude(), topLeft.getLongitude()),
-                    new Coordinate(botRight.getLatitude(), center.getLongitude()), this);
-            botRightSq = new CellularRegion(center, botRight, this);
-            botLeftSq = new CellularRegion(new Coordinate(topLeft.getLatitude(), center.getLongitude()),
-                    new Coordinate(center.getLatitude(), botRight.getLongitude()), this);
-
-            assignTowersToRegion();
-        }
+    public List<CellTower> getTowersInRegion() {
+        return towersInRegion;
     }
 
 
     /**
-     *
+     * Set list of towers in region
+     */
+    @Override
+    public void setTowersInRegion(List<CellTower> towersInRegion) {
+        this.towersInRegion = towersInRegion;
+    }
+
+
+    /**
+     * Divides this cellular region into 4 sub-regions
+     */
+    @Override
+    public void subDivide() {
+        // subDivide is only called if the current region is a leaf
+        // get center coordinate
+        Coordinate center = computeCenter(topLeft, botRight);
+
+        // create 4 new subregions with new coordinates and this region as its parent
+        topLeftSq = new CellularRegion(topLeft, center, this);
+        topRightSq = new CellularRegion(new Coordinate(center.getLatitude(), topLeft.getLongitude()),
+                new Coordinate(botRight.getLatitude(), center.getLongitude()), this);
+        botRightSq = new CellularRegion(center, botRight, this);
+        botLeftSq = new CellularRegion(new Coordinate(topLeft.getLatitude(), center.getLongitude()),
+                new Coordinate(center.getLatitude(), botRight.getLongitude()), this);
+
+        // assign towers from this region into each subregion
+        assignTowersToRegion();
+    }
+
+
+    /**
+     * Divides towers in this cellular region across 4 sub-regions based on coordinates of each tower
      */
     private void assignTowersToRegion() {
+        // iterate each tower in this region and determine which subregion the tower should be assigned to
         // get latitude and longitude of current tower
         for (CellTower tower : towersInRegion) {
+            // initialize coordinates for tower
             Coordinate towerCoord = new Coordinate(tower.getLat(), tower.getLong());
 
-            // check which child tower should be assigned to
+            // compare each tower's coordinates to the bounds of each region and add to
+            // corresponding region's list of towers
             if (topLeftSq.isCoordinateWithinRegion(towerCoord)) {
                 topLeftSq.getTowersInRegion().add(tower);
             } else if (topRightSq.isCoordinateWithinRegion(towerCoord)) {
@@ -122,8 +135,8 @@ public class CellularRegion implements ICellularRegion {
 
     /**
      * Checks if a coordinate is within this region's area
-     * @param coordinate
-     * @return boolean
+     * @param coordinate location to check within region's area
+     * @return true if coordinate is within area, false otherwise
      */
     public boolean isCoordinateWithinRegion(Coordinate coordinate) {
         // get lat and long for each coordinate
@@ -139,12 +152,11 @@ public class CellularRegion implements ICellularRegion {
     }
 
 
-
     /**
-     * Computes center given top left and bottom right points
-     * @param topLeft Point
-     * @param botRight Point
-     * @return center Point
+     * Computes center of region given top left and bottom right coordinates
+     * @param topLeft Coordinate
+     * @param botRight Coordinate
+     * @return center Coordinate
      */
     private Coordinate computeCenter(Coordinate topLeft, Coordinate botRight) {
         // calculate center coordinate
@@ -155,8 +167,8 @@ public class CellularRegion implements ICellularRegion {
 
 
     /**
-     * List of children of this region
-     * @return
+     * List of children of this region (sub-regions of this region)
+     * @return List of children of this region
      */
     @Override
     public List<ICellularRegion> children() {
@@ -182,6 +194,7 @@ public class CellularRegion implements ICellularRegion {
      */
     @Override
     public boolean isLeaf() {
+        // CellularRegion is a leaf if 0 or 1 towers are in the region
         if (towersInRegion.size() == 0 || towersInRegion.size() == 1) {
             return true;
         }
@@ -189,35 +202,15 @@ public class CellularRegion implements ICellularRegion {
     }
 
 
-
-    /**
-     * Get list of towers in region
-     * @return
-     */
-    @Override
-    public List<CellTower> getTowersInRegion() {
-        return towersInRegion;
-    }
-    
-    /**
-     * Get list of towers in region
-     * @return
-     */
-    @Override
-    public void setTowersInRegion(List<CellTower> towersinRegion) {
-        this.towersInRegion = towersinRegion;
-    }
-
-
     /**
      * Get list of sibling sub-regions
-     * @return
+     * @return List of neighboring sub-regions
      */
     @Override
     public List<ICellularRegion> getSiblings() {
-        // get children of parent, including this object
+        // Get all children of parent region
         List<ICellularRegion> siblings = parent.children();
-        // remove this object from sibling list
+        // remove this sub-region from sibling list
         siblings.remove(this);
         return siblings;
     }

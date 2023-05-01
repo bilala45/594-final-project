@@ -21,14 +21,14 @@ public class Path implements IPath {
 
 
     // constructor
-    public Path(int cellTowerId1, int cellTowerId2, CellNetwork network) {
+    public Path(int cellTowerId1, int cellTowerId2, ICellNetwork network) {
         // assign cell tower ids to instance variables
         this.cellTowerId1 = cellTowerId1;
         this.cellTowerId2 = cellTowerId2;
         // get graph from cell tower network
-        graph = network.getCellNetworkGraph();
+        graph = ((CellNetwork) network).getCellNetworkGraph();
         // get id to vertex map
-        idToVertexMap = network.getIdToVertexMap();
+        idToVertexMap = ((CellNetwork) network).getIdToVertexMap();
         // stores path from source to destination vertex
         shortestPath = new ArrayList<>();
 

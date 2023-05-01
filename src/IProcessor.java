@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 interface IProcessor {
+
     /**
      * used to process CSV file line by line and create a Map of cell tower id 
      * to cell tower instance
@@ -17,6 +18,5 @@ interface IProcessor {
     
     public Map<Integer, CellTower> getTowerMap();
     public List<CellTower> getTowerList();
-
 
 }

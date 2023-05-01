@@ -11,10 +11,15 @@ public class PathTest {
 
     @Before
     public void setUp() {
-        Processor processor = new Processor();
-        processor.readCSVFile("./atlantic-test-data.csv");
-        CellNetwork cellNetwork = new CellNetwork(processor);
-        cellNetwork.networkInit();
+        // Create processor object
+        // On initialization, the processor object
+        // - reads a CSV file
+        // - constructs the quad tree object corresponding to the region
+        Processor processor = new Processor("atlantic-test-data.csv");
+
+        // Construct graph associated with CellTower objects for routing
+        ICellNetwork cellNetwork = new CellNetwork(processor);
+
         path = new Path(15052, 34696, cellNetwork);
     }
 

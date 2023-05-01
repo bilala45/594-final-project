@@ -9,84 +9,195 @@ public class Person implements IPerson {
 
     // Name of person
     private String name;
-    // coordinate object for person's position (must be negative)
+    // coordinate object for person's position
     private Coordinate location;
     // person's cell phone carrier
     private String carrier;
     // checks if person can connect to network
     private boolean canConnect;
-    // cell tower associated with person
+    // CellTower object closest to person's location
     private CellTower personCellTower;
 
 
     /**
      * Person constructor
-     * @param firstName
-     * @param cellCarrier
-     * @param lat
-     * @param lon
+     * @param firstName person's name
+     * @param cellCarrier person's cell carrier
+     * @param lat person's latitude
+     * @param lon person's longitude
      */
     public Person(String firstName, String cellCarrier, double lat, double lon, ICellularRegion root) {
-        setName(firstName);
+        // set person's first name
+        name = firstName;
+        // set person's cell phone carrier
         setCarrier(cellCarrier);
         // create coordinate object to represent person's location
-        location = new Coordinate(lat, lon);
-        // check if the person can connect
+        setLocation(lat, lon);
+
+        // if this Person can connect, get the cell tower nearest to the Person
         if (canConnect) {
             personCellTower = findNearestCellTower(root);
         }
     }
 
 
+    // Getters for Person's fields
+    public String getName() { return name; }
+
+    public Coordinate getLocation() {
+        return location;
+    }
+
+    public String getCarrier() {
+        return carrier;
+    }
+
+    public boolean getCanConnect() {
+        return canConnect;
+    }
+
+    public CellTower getPersonCellTower() {
+        return personCellTower;
+    }
+
+
     /**
-     * Method to set carrier of person by coercing all carriers into AT&T or Verizon
-     * @param carrier
+     * Method to validate person's location
+     * @param lat person's latitude
+     * @param lon person's longitude
+     */
+    public void setLocation(double lat, double lon) {
+        // create location object for given coordinates
+        location = new Coordinate(lat, lon);
+
+        // determine if person can connect by checking if person's location is within bounds of cellular region being served
+        if ((lon >= ICellularRegion.botRight.getLongitude() && lon <= ICellularRegion.topLeft.getLongitude())
+                && (lat <= ICellularRegion.botRight.getLatitude() && lat >= ICellularRegion.topLeft.getLatitude())) {
+            canConnect = true;
+        }
+    }
+
+
+    /**
+     * Method to set carrier of person (coerces all carriers into AT&T or Verizon)
+     * @param carrier a person's cell phone carrier
      */
     public void setCarrier(String carrier) {
+        // process carrier string to be lowercase
+        carrier = carrier.toLowerCase();
+
+        // check if carrier provided is a valid carrier in the map of valid providers
         if (PROVIDERMAP.containsKey(carrier)) {
-            carrier = carrier.toLowerCase();
+            // set person's carrier to carrier in map
             this.carrier = PROVIDERMAP.get(carrier);
+            // validate connection
             canConnect = true;
         } else {
+            // carrier doesn't match a valid provider, canConnect remains false
             this.carrier = carrier;
         }
     }
 
 
     /**
-     *
+     * Traverses quad tree to find CellTower closest to this Person
+     * @param root of quad tree
+     * @return CellTower object closest to this Person
      */
-    private CellularRegion findClosestCellularRegion(Coordinate currLocation, CellularRegion currRegion) {
+    public CellTower findNearestCellTower(ICellularRegion root) {
+        // create copy of person's location for traversal
+        Coordinate currLocation = new Coordinate(location.getLatitude(), location.getLongitude());
+
+        // initialize stack and place root in stack
+        Stack<ICellularRegion> stack = new Stack<>();
+        stack.push(root);
+
+        // iterate until stack is empty
+        while (!stack.isEmpty()) {
+            // get the current region in the traversal
+            ICellularRegion currRegion = stack.pop();
+
+            // If the current region is a leaf, this region may contain the nearest cell tower
+            if (currRegion.isLeaf()) {
+                // return cell tower in region if this region contains a single cell tower
+                if (currRegion.getTowersInRegion().size() == 1) {
+                    return currRegion.getTowersInRegion().get(0);
+                }
+                // current region is a leaf but no cell towers are in the region
+                // in this case, we:
+                // - reset the person's location to be the center of the person's closest neighboring region
+                // - push the new region back onto the stack so that we traverse that region's children instead
+                ICellularRegion newRegion = findClosestCellularRegion(currLocation, currRegion);
+                stack.push(newRegion);
+            }
+            // current region is not a leaf
+            else {
+//                // push the region onto the stack that the person's location is located within
+//                if (((CellularRegion) currRegion).getTopLeftSq() != null && ((CellularRegion) currRegion).getTopLeftSq().isCoordinateWithinRegion(currLocation)) {
+//                    stack.push(((CellularRegion) currRegion).getTopLeftSq());
+//                } else if (((CellularRegion) currRegion).getTopRightSq() != null && ((CellularRegion) currRegion).getTopRightSq().isCoordinateWithinRegion(currLocation)) {
+//                    stack.push(((CellularRegion) currRegion).getTopRightSq());
+//                } else if (((CellularRegion) currRegion).getBotRightSq() != null && ((CellularRegion) currRegion).getBotRightSq().isCoordinateWithinRegion(currLocation)) {
+//                    stack.push(((CellularRegion) currRegion).getBotRightSq());
+//                } else {
+//                    stack.push(((CellularRegion) currRegion).getBotLeftSq());
+//                }
+                // push the region onto the stack that the person's location is located within
+                if (((CellularRegion) currRegion).getTopLeftSq().isCoordinateWithinRegion(currLocation)) {
+                    stack.push(((CellularRegion) currRegion).getTopLeftSq());
+                } else if (((CellularRegion) currRegion).getTopRightSq().isCoordinateWithinRegion(currLocation)) {
+                    stack.push(((CellularRegion) currRegion).getTopRightSq());
+                } else if (((CellularRegion) currRegion).getBotRightSq().isCoordinateWithinRegion(currLocation)) {
+                    stack.push(((CellularRegion) currRegion).getBotRightSq());
+                } else {
+                    stack.push(((CellularRegion) currRegion).getBotLeftSq());
+                }
+            }
+        }
+        // return null if traversal ended finding the nearest cell tower (should be a rare occurrence)
+        // in this case, canConnect is set to false because the person's call could not be routed to a cell tower
+        canConnect = false;
+        return null;
+    }
+
+
+    /**
+     *
+     * @param currLocation current location of person (potentially different if person's location was
+     *                     reset in findNearestCellTower
+     * @param currRegion current region of board that person is in (this region is necessarily a leaf)
+     * @return CellularRegion object nearest to person's location
+     */
+    private ICellularRegion findClosestCellularRegion(Coordinate currLocation, ICellularRegion currRegion) {
         // get siblings of current region
         List<ICellularRegion> siblings = currRegion.getSiblings();
 
-        // for each sibling, compute its center
-        Coordinate center1 = computeCenter(((CellularRegion) siblings.get(0)).getTopLeft(),
-                ((CellularRegion) siblings.get(0)).getBotRight());
-        Coordinate center2 = computeCenter(((CellularRegion) siblings.get(1)).getTopLeft(),
-                ((CellularRegion) siblings.get(1)).getBotRight());
-        Coordinate center3 = computeCenter(((CellularRegion) siblings.get(2)).getTopLeft(),
-                ((CellularRegion) siblings.get(2)).getBotRight());
+        // sibling center
+        Coordinate[] siblingCenter = new Coordinate[3];
+        int[] distanceFromSiblingToPerson = new int[3];
+        for (int i = 0 ; i < siblingCenter.length ; i++) {
+            // get center of sibling region
+            siblingCenter[i] = computeCenter(((CellularRegion) siblings.get(i)).getTopLeft(),
+                    ((CellularRegion) siblings.get(i)).getBotRight());
 
-        // compute distance between current location and each center coordinate
-        int distance1 = computeNauticalMiles(currLocation, center1);
-        int distance2 = computeNauticalMiles(currLocation, center2);
-        int distance3 = computeNauticalMiles(currLocation, center3);
-
-        // take min of 3 distances
-        int tempMin = Math.min(distance1, distance2);
-        tempMin = Math.min(tempMin, distance3);
-
-        // return region corresponding to minimum of distances
-        if (tempMin == distance1) {
-            currLocation = center1;
-            return (CellularRegion) siblings.get(0);
-        } else if (tempMin == distance2) {
-            currLocation = center2;
-            return (CellularRegion) siblings.get(1);
+            // compute distance between current location and each sibling's center
+            distanceFromSiblingToPerson[i] = computeNauticalMiles(currLocation, siblingCenter[i]);
         }
-        currLocation = center3;
-        return (CellularRegion) siblings.get(2);
+
+        // iterate through array of distances from sibling to person and find min and index of min
+        int minIndex = 0;
+        int minDistance = Integer.MAX_VALUE;
+        for (int i = 0 ; i < distanceFromSiblingToPerson.length ; i++) {
+            if (distanceFromSiblingToPerson[i] <= minDistance) {
+                minIndex = i;
+                minDistance = distanceFromSiblingToPerson[i];
+            }
+        }
+
+        // set current location to center of sibling with min distance
+        currLocation = siblingCenter[minIndex];
+        // return region associated with min index
+        return siblings.get(minIndex);
     }
 
 
@@ -95,9 +206,9 @@ public class Person implements IPerson {
      *
      * @param coord1 coordinate 1
      * @param coord2 coordinate 2
-     * @return distance between towers 1 and 2 in nautical miles
+     * @return distance between locations 1 and 2 in nautical miles
      */
-    public int computeNauticalMiles(Coordinate coord1, Coordinate coord2) {
+    private int computeNauticalMiles(Coordinate coord1, Coordinate coord2) {
         // get latitude and longitude of towers 1 and 2
         double lat1 = coord1.getLatitude();
         double long1 = coord1.getLongitude();
@@ -125,10 +236,10 @@ public class Person implements IPerson {
 
 
     /**
-     * Computes center given top left and bottom right points
-     * @param topLeft Point
-     * @param botRight Point
-     * @return center Point
+     * Computes center given top left and bottom right coordinates
+     * @param topLeft Coordinate
+     * @param botRight Coordinate
+     * @return center Coordinate
      */
     private Coordinate computeCenter(Coordinate topLeft, Coordinate botRight) {
         // calculate center coordinate
@@ -136,75 +247,4 @@ public class Person implements IPerson {
         double cenLong = (topLeft.getLongitude() + botRight.getLongitude()) / 2;
         return new Coordinate(cenLat, cenLong);
     }
-
-
-
-    /**
-     * Given a Person's coordinates, find the nearest cell tower
-     * @return
-     */
-    public CellTower findNearestCellTower(ICellularRegion root) {
-        // create copy of person's location for traversal
-        Coordinate currLocation = new Coordinate(location.getLatitude(), location.getLongitude());
-
-        // initialize queue and place root in queue
-        Stack<ICellularRegion> stack = new Stack<>();
-        stack.push(root);
-
-        // iterate until queue is empty
-        while (!stack.isEmpty()) {
-            // get the current region in the traversal
-            ICellularRegion currRegion = stack.pop();
-
-            // if current region is a leaf:
-            // if empty, go back up the tree
-            // otherwise, return the cell
-            if (currRegion.isLeaf()) {
-                // return cell tower if only one cell tower in region
-                if (currRegion.getTowersInRegion().size() == 1) {
-                    return currRegion.getTowersInRegion().get(0);
-                }
-                // no cell towers in region
-                ICellularRegion newRegion = findClosestCellularRegion(currLocation, (CellularRegion) currRegion);
-                stack.push(newRegion);
-            }
-
-            if (!currRegion.isLeaf()) {
-                if (((CellularRegion) currRegion).getTopLeftSq() != null && ((CellularRegion) currRegion).getTopLeftSq().isCoordinateWithinRegion(currLocation)) {
-                    stack.push(((CellularRegion) currRegion).getTopLeftSq());
-                } else if (((CellularRegion) currRegion).getTopRightSq() != null && ((CellularRegion) currRegion).getTopRightSq().isCoordinateWithinRegion(currLocation)) {
-                    stack.push(((CellularRegion) currRegion).getTopRightSq());
-                } else if (((CellularRegion) currRegion).getBotRightSq() != null && ((CellularRegion) currRegion).getBotRightSq().isCoordinateWithinRegion(currLocation)) {
-                    stack.push(((CellularRegion) currRegion).getBotRightSq());
-                } else {
-                    stack.push(((CellularRegion) currRegion).getBotLeftSq());
-                }
-            }
-        }
-        // return null if traversal ended without finding a sub block with pos arg
-        return null;
-    }
-
-
-    // Getters and setters for fields
-
-    public boolean getCanConnect() {
-        return canConnect;
-    }
-
-    public String getName() { return name; }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCarrier() {
-        return carrier;
-    }
-
-
-    public CellTower getPersonCellTower() {
-        return personCellTower;
-    }
-
 }

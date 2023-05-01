@@ -12,10 +12,14 @@ public class CellNetworkTest {
 
     @Before
     public void setUp() {
-        // processor should be initialized with atlantic test dataset
-        Processor processor = new Processor();
-        processor.readCSVFile("./atlantic-test-data.csv");
-        cellNetwork = new CellNetwork(processor);
+        // Initialize processor object
+        // On initialization, the processor object
+        // - reads a CSV file
+        // - constructs the quad tree object corresponding to the region
+        Processor processor = new Processor("atlantic-test-data.csv");
+
+        // Construct graph associated with CellTower objects for routing
+        ICellNetwork cellNetwork = new CellNetwork(processor);
     }
 
     @Test
@@ -30,23 +34,19 @@ public class CellNetworkTest {
         Assert.assertEquals(23, distance);
     }
 
+
     @Test
     public void assignVertices() {
-        // assign vertices to graph
-        cellNetwork.assignVertices();
-        // get graph created by assigning vertices
+        // get graph created by cell network constructor
         Graph graph = cellNetwork.getCellNetworkGraph();
         // ensure number of vertices matches number of cell towers in data set
         Assert.assertEquals(11, graph.nodeCount());
     }
 
+
     @Test
     public void generateTowerConnections() {
-        // assign vertices to graph
-        cellNetwork.assignVertices();
-        // assign edges to graph
-        cellNetwork.generateTowerConnections();
-        // get graph created by assigning vertices
+        // get graph created by cell network constructor
         Graph graph = cellNetwork.getCellNetworkGraph();
 
         // ensure edge exists between vertices
