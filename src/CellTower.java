@@ -113,7 +113,7 @@ public class CellTower implements ICellTower {
     
     @Override
     public String toString() {
-        String out = null;
+        String out = "";
         
         out  += "\t⧋  \t\n" + "id: " + id + " at " + city + ", " + state;
         
