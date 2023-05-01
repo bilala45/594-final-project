@@ -115,9 +115,7 @@ public class CellTower implements ICellTower {
     public String toString() {
         String out = null;
         
-        //out  += "\t⧋  \t\n" + "id: " + id + " at " + city + ", " + state;
-        
-        out =  id + ": " + county +"," + city + ", " + state + " located at: (" + latitude + ","  + longitude + ")" + "\n";
+        out  += "\t⧋  \t\n" + "id: " + id + " at " + city + ", " + state;
         
         return out;
         
