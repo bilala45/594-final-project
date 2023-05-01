@@ -12,14 +12,14 @@ public class CellNetworkTest {
 
     @Before
     public void setUp() {
-        // Initialize processor object
+        // Create processor object
         // On initialization, the processor object
         // - reads a CSV file
         // - constructs the quad tree object corresponding to the region
         Processor processor = new Processor("atlantic-test-data.csv");
 
         // Construct graph associated with CellTower objects for routing
-        ICellNetwork cellNetwork = new CellNetwork(processor);
+        cellNetwork = new CellNetwork(processor);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class CellNetworkTest {
     }
 
     @Test
-    public void testComputeEdgeWeight() {
+    public void testComputeEdgeWeightInvalid() {
         // create two cell tower objects
         CellTower tower1 = new CellTower(10, 39.38, 74.45,
                 "Verizon", "", "", "", "");
@@ -64,6 +64,6 @@ public class CellNetworkTest {
                 "AT&T", "", "", "", "");
 
         int edgeWt = cellNetwork.computeEdgeWeight(tower1, tower2);
-        Assert.assertEquals(555, edgeWt);
+        Assert.assertEquals(-1, edgeWt);
     }
 }
