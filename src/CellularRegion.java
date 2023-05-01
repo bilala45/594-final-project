@@ -182,16 +182,16 @@ public class CellularRegion implements ICellularRegion {
         // cellular region has subdivisions if it is not a leaf region
         if (!isLeaf()) {
             // add all children that are not leaves
-            if (!topLeftSq.isLeaf()) {
+            if (topLeftSq.getTowersInRegion().size() > 0) {
                 list.add(topLeftSq);
             }
-            if (!topRightSq.isLeaf()) {
+            if (topRightSq.getTowersInRegion().size() > 0) {
                 list.add(topRightSq);
             }
-            if (!botRightSq.isLeaf()) {
+            if (botRightSq.getTowersInRegion().size() > 0) {
                 list.add(botRightSq);
             }
-            if (!botLeftSq.isLeaf()) {
+            if (botLeftSq.getTowersInRegion().size() > 0) {
                 list.add(botLeftSq);
             }
         }
