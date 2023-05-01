@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class provides a concrete implementation of the IPerson interface.
@@ -117,12 +118,28 @@ public class Person implements IPerson {
             // get the current region in the traversal
             ICellularRegion currRegion = stack.pop();
 
+            System.out.println("Top Left and Bottom Right");
+            System.out.println(((CellularRegion) currRegion).getTopLeft());
+            System.out.println(((CellularRegion) currRegion).getBotRight());
+            System.out.println(currRegion.getTowersInRegion().size());
+            System.out.println();
+
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
             // If the current region is a leaf, this region may contain the nearest cell tower
             if (currRegion.isLeaf()) {
+                // TODO would have to change this so that we call some method that finds the
+                // TODO cell tower closest to us once we get to a sub-region with a small enough number of cell towers
                 // return cell tower in region if this region contains a single cell tower
                 if (currRegion.getTowersInRegion().size() == 1) {
                     return currRegion.getTowersInRegion().get(0);
                 }
+                // TODO this logic should still be fine with the change but it would probably work better
+                // TODO because it would be more of an edge case, so we would almost always have siblings with leafs
                 // current region is a leaf but no cell towers are in the region
                 // in this case, we:
                 // - reset the person's location to be the center of the person's closest neighboring region
@@ -132,24 +149,14 @@ public class Person implements IPerson {
             }
             // current region is not a leaf
             else {
-//                // push the region onto the stack that the person's location is located within
-//                if (((CellularRegion) currRegion).getTopLeftSq() != null && ((CellularRegion) currRegion).getTopLeftSq().isCoordinateWithinRegion(currLocation)) {
-//                    stack.push(((CellularRegion) currRegion).getTopLeftSq());
-//                } else if (((CellularRegion) currRegion).getTopRightSq() != null && ((CellularRegion) currRegion).getTopRightSq().isCoordinateWithinRegion(currLocation)) {
-//                    stack.push(((CellularRegion) currRegion).getTopRightSq());
-//                } else if (((CellularRegion) currRegion).getBotRightSq() != null && ((CellularRegion) currRegion).getBotRightSq().isCoordinateWithinRegion(currLocation)) {
-//                    stack.push(((CellularRegion) currRegion).getBotRightSq());
-//                } else {
-//                    stack.push(((CellularRegion) currRegion).getBotLeftSq());
-//                }
                 // push the region onto the stack that the person's location is located within
-                if (((CellularRegion) currRegion).getTopLeftSq().isCoordinateWithinRegion(currLocation)) {
+                if (((CellularRegion) currRegion).getTopLeftSq() != null && ((CellularRegion) currRegion).getTopLeftSq().isCoordinateWithinRegion(currLocation)) {
                     stack.push(((CellularRegion) currRegion).getTopLeftSq());
-                } else if (((CellularRegion) currRegion).getTopRightSq().isCoordinateWithinRegion(currLocation)) {
+                } else if (((CellularRegion) currRegion).getTopRightSq() != null && ((CellularRegion) currRegion).getTopRightSq().isCoordinateWithinRegion(currLocation)) {
                     stack.push(((CellularRegion) currRegion).getTopRightSq());
-                } else if (((CellularRegion) currRegion).getBotRightSq().isCoordinateWithinRegion(currLocation)) {
+                } else if (((CellularRegion) currRegion).getBotRightSq() != null && ((CellularRegion) currRegion).getBotRightSq().isCoordinateWithinRegion(currLocation)) {
                     stack.push(((CellularRegion) currRegion).getBotRightSq());
-                } else {
+                } else if (((CellularRegion) currRegion).getBotLeftSq() != null && ((CellularRegion) currRegion).getBotLeftSq().isCoordinateWithinRegion(currLocation)) {
                     stack.push(((CellularRegion) currRegion).getBotLeftSq());
                 }
             }
@@ -172,32 +179,36 @@ public class Person implements IPerson {
         // get siblings of current region
         List<ICellularRegion> siblings = currRegion.getSiblings();
 
-        // sibling center
-        Coordinate[] siblingCenter = new Coordinate[3];
-        int[] distanceFromSiblingToPerson = new int[3];
-        for (int i = 0 ; i < siblingCenter.length ; i++) {
-            // get center of sibling region
-            siblingCenter[i] = computeCenter(((CellularRegion) siblings.get(i)).getTopLeft(),
-                    ((CellularRegion) siblings.get(i)).getBotRight());
+//        if (siblings.size() != 0) {
+            // sibling center
+            Coordinate[] siblingCenter = new Coordinate[siblings.size()];
+            int[] distanceFromSiblingToPerson = new int[siblings.size()];
+            for (int i = 0 ; i < siblingCenter.length ; i++) {
+                // get center of sibling region
+                siblingCenter[i] = computeCenter(((CellularRegion) siblings.get(i)).getTopLeft(),
+                        ((CellularRegion) siblings.get(i)).getBotRight());
 
-            // compute distance between current location and each sibling's center
-            distanceFromSiblingToPerson[i] = computeNauticalMiles(currLocation, siblingCenter[i]);
-        }
-
-        // iterate through array of distances from sibling to person and find min and index of min
-        int minIndex = 0;
-        int minDistance = Integer.MAX_VALUE;
-        for (int i = 0 ; i < distanceFromSiblingToPerson.length ; i++) {
-            if (distanceFromSiblingToPerson[i] <= minDistance) {
-                minIndex = i;
-                minDistance = distanceFromSiblingToPerson[i];
+                // compute distance between current location and each sibling's center
+                distanceFromSiblingToPerson[i] = computeNauticalMiles(currLocation, siblingCenter[i]);
             }
-        }
 
-        // set current location to center of sibling with min distance
-        currLocation = siblingCenter[minIndex];
-        // return region associated with min index
-        return siblings.get(minIndex);
+            // iterate through array of distances from sibling to person and find min and index of min
+            int minIndex = -1;
+            int minDistance = Integer.MAX_VALUE;
+            for (int i = 0 ; i < distanceFromSiblingToPerson.length ; i++) {
+                if (distanceFromSiblingToPerson[i] < minDistance) {
+                    minIndex = i;
+                    minDistance = distanceFromSiblingToPerson[i];
+                }
+            }
+
+            // set current location to center of sibling with min distance
+            currLocation = siblingCenter[minIndex];
+            // return region associated with min index
+            return siblings.get(minIndex);
+//        }
+//        // siblings are all empty, go back to parent and try again
+//        return ((CellularRegion) currRegion).getParent();
     }
 
 

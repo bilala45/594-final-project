@@ -3,8 +3,10 @@ import java.util.List;
 public interface ICellularRegion {
 
         //  Top left and bottom right points delimiting this QuadTree
-        public static final Coordinate topLeft = new Coordinate(-85, 50);
-        public static final Coordinate botRight = new Coordinate(-69, 34);
+//        public static final Coordinate topLeft = new Coordinate(-85, 50);
+//        public static final Coordinate botRight = new Coordinate(-69, 34);
+        public static final Coordinate topLeft = new Coordinate(50, -85);
+        public static final Coordinate botRight = new Coordinate(34, -69);
 
 
         /**

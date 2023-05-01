@@ -48,6 +48,10 @@ public class CellularRegion implements ICellularRegion {
         return botRight;
     }
 
+    // getter for this region's parent
+    public ICellularRegion getParent() {
+        return parent;
+    }
 
     // Getters for each sub-region of this region
     public ICellularRegion getTopLeftSq() {
@@ -126,7 +130,7 @@ public class CellularRegion implements ICellularRegion {
                 topRightSq.getTowersInRegion().add(tower);
             } else if (botRightSq.isCoordinateWithinRegion(towerCoord)) {
                 botRightSq.getTowersInRegion().add(tower);
-            } else {
+            } else if (botLeftSq.isCoordinateWithinRegion(towerCoord)) {
                 botLeftSq.getTowersInRegion().add(tower);
             }
         }
@@ -144,8 +148,8 @@ public class CellularRegion implements ICellularRegion {
         double longitude = coordinate.getLongitude();
 
         // return true if coordinate is within bounds of cellular region
-        if ((longitude >= botRight.getLongitude() && longitude <= topLeft.getLongitude())
-            && (latitude <= botRight.getLatitude() && latitude >= topLeft.getLatitude())) {
+        if ((longitude <= botRight.getLongitude() && longitude >= topLeft.getLongitude())
+            && (latitude >= botRight.getLatitude() && latitude <= topLeft.getLatitude())) {
             return true;
         }
         return false;
@@ -177,16 +181,29 @@ public class CellularRegion implements ICellularRegion {
 
         // cellular region has subdivisions if it is not a leaf region
         if (!isLeaf()) {
-            list.add(topLeftSq);
-            list.add(topRightSq);
-            list.add(botRightSq);
-            list.add(botLeftSq);
+            // add all children that are not leaves
+            if (!topLeftSq.isLeaf()) {
+                list.add(topLeftSq);
+            }
+            if (!topRightSq.isLeaf()) {
+                list.add(topRightSq);
+            }
+            if (!botRightSq.isLeaf()) {
+                list.add(botRightSq);
+            }
+            if (!botLeftSq.isLeaf()) {
+                list.add(botLeftSq);
+            }
         }
 
         return list;
     }
 
 
+    // TODO could change this so that a leaf represents a larger number of cell towers
+    // TODO once we get to a leaf with (maybe 5?) cell towers, we just take the one closest to our location
+    // TODO this might help us get around the heap space issue
+    // TODO then, a leaf is any cellular region with less than 5 towers in that region
     /**
      * Checks if CellularRegion is a leaf (has found nearest tower because
      * there is only 0 or 1 tower in region)

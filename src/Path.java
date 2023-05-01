@@ -32,18 +32,18 @@ public class Path implements IPath {
         // stores path from source to destination vertex
         shortestPath = new ArrayList<>();
 
-        int[][] graphm = ((GraphM) graph).getMatrix();
-        for (int i = 0 ; i < graph.nodeCount() ; i++) {
-            System.out.print(((CellTower) graph.getValue(i)).getId() + "\t");
-        }
-        System.out.println();
-
-        for (int i = 0 ; i < graphm.length ; i++) {
-            for (int j = 0 ; j < graphm[i].length ; j++) {
-                System.out.print(graphm[i][j] + "\t");
-            }
-            System.out.println();
-        }
+//        int[][] graphm = ((GraphM) graph).getMatrix();
+//        for (int i = 0 ; i < graph.nodeCount() ; i++) {
+//            System.out.print(((CellTower) graph.getValue(i)).getId() + "\t");
+//        }
+//        System.out.println();
+//
+//        for (int i = 0 ; i < graphm.length ; i++) {
+//            for (int j = 0 ; j < graphm[i].length ; j++) {
+//                System.out.print(graphm[i][j] + "\t");
+//            }
+//            System.out.println();
+//        }
     }
 
 
@@ -53,7 +53,7 @@ public class Path implements IPath {
      *
      * @return collection of nodes to follow to go from source to destination
      */
-    public List<CellTower> path() {
+    public List<CellTower> calculatePath() {
         // get vertices associated with cell tower ids
         int source = idToVertexMap.get(cellTowerId1);
         int destination = idToVertexMap.get(cellTowerId2);

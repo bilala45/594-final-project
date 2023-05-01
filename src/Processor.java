@@ -1,6 +1,7 @@
 import java.util.*;
 import java.awt.Color;
 import java.io.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Implements logic for program
@@ -96,11 +97,6 @@ public class Processor implements IProcessor {
             // Poll from queue
             ICellularRegion curr = q.poll();
 
-            System.out.println("Top Left and Bottom Right");
-            System.out.println(((CellularRegion) curr).getTopLeft());
-            System.out.println(((CellularRegion) curr).getBotRight());
-            System.out.println();
-
             // subdivide the region as long as the region itself isn't a leaf
             if (!curr.isLeaf()) {
                 curr.subDivide();
@@ -120,7 +116,7 @@ public class Processor implements IProcessor {
         // On initialization, the processor object
         // - reads a CSV file
         // - constructs the quad tree object corresponding to the region
-        Processor processor = new Processor("Northeast_dataset_2_2.csv");
+        Processor processor = new Processor("atlantic-test-data.csv");
 
         // Construct graph associated with CellTower objects for routing
         ICellNetwork cellNetwork = new CellNetwork(processor);

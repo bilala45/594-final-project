@@ -25,7 +25,7 @@ public class PathTest {
 
     @Test
     public void testPath() {
-        List<CellTower> towerPath = path.path();
+        List<CellTower> towerPath = path.calculatePath();
         System.out.println(path);
     }
 }
