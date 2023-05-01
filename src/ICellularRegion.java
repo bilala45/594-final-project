@@ -64,6 +64,23 @@ public interface ICellularRegion {
         */
         public ICellularRegion getParent();
         
+        // getters for top Left coordinate
+        public Coordinate getTopLeft();
+        
+        // getters for bottom Right coordinate
+        public Coordinate getBotRight();
+        
+        //Getter for top left child of current cell region
+        public ICellularRegion getTopLeftSq();
+
+        //Getter for top right child of current cell region
+        public ICellularRegion getTopRightSq();
+
+        //Getter for bottom right child of current cell region
+        public ICellularRegion getBotRightSq();
+        
+        //Getter for bottom left child of current cell region
+        public ICellularRegion getBotLeftSq();
 }
 
 
