@@ -118,11 +118,11 @@ public class Person implements IPerson {
             // get the current region in the traversal
             ICellularRegion currRegion = stack.pop();
 
-            System.out.println("Top Left and Bottom Right");
-            System.out.println(((CellularRegion) currRegion).getTopLeft());
-            System.out.println(((CellularRegion) currRegion).getBotRight());
-            System.out.println(currRegion.getTowersInRegion().size());
-            System.out.println();
+            //System.out.println("Top Left and Bottom Right");
+            //System.out.println(((CellularRegion) currRegion).getTopLeft());
+            //System.out.println(((CellularRegion) currRegion).getBotRight());
+            //System.out.println(currRegion.getTowersInRegion().size());
+            //System.out.println();
 
             try {
                 TimeUnit.MILLISECONDS.sleep(100);

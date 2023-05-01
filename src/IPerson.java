@@ -21,5 +21,6 @@ public interface IPerson {
                 put("h20", "AT&T");
                 put("tmobile", "AT&T");
                 put("t-mobile", "AT&T");
-                put("xfinity", "Verizon");}});
+                put("xfinity", "Verizon");
+                put("sprint", "Verizon");}});
 }

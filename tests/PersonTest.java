@@ -6,6 +6,7 @@ import org.junit.Test;
 public class PersonTest {
 
     private Processor processor;
+    private ICellNetwork cellNetwork;
 
     @Before
     public void setUp() {
@@ -13,7 +14,9 @@ public class PersonTest {
         // On initialization, the processor object
         // - reads a CSV file
         // - constructs the quad tree object corresponding to the region
-        Processor processor = new Processor("atlantic-test-data.csv");
+        processor = new Processor("atlantic-test-data.csv");
+        cellNetwork = new CellNetwork(processor);
+        
     }
 
     @Test
@@ -31,5 +34,14 @@ public class PersonTest {
         Person p = new Person("Jane","t-mobile", 1.0006, 5.456, null);
         assertEquals("AT&T", p.getCarrier());
     }
+    
+    @Test
+    public void setCarrierTest() {
+        Person p = new Person("Jane","t-mobile", 1.0006, 5.456, null);
+        p.setCarrier("sprint");
+        assertEquals("Verizon", p.getCarrier());
+    }
+    
+    
 
 }
