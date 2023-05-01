@@ -1,121 +1,89 @@
 import static org.junit.Assert.*;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
 public class ProcessorTest {
 
-    @Test
-    public void test() {
-        Processor p = new Processor("atlantic-test-data.csv");
-        assertEquals(11, p.getTowerList().size());
-        
-        Processor p2 = new Processor("northeast-data.csv");
-        assertEquals(1385, p2.getTowerMap().size());
-        assertEquals(1385, p2.getTowerList().size());
-    }
+    private Processor processorAtlantic;
+    private Processor processorNortheast;
+    private ICellNetwork cellNetworkAtlantic;
+    private ICellNetwork cellNetworkNortheast;
 
-
-    @Test
-    public void testProcessorWorking() {
+    @Before
+    public void setUp() {
         // Create processor object
         // On initialization, the processor object
         // - reads a CSV file
         // - constructs the quad tree object corresponding to the region
-        Processor processor = new Processor("northeast-data.csv");
+        processorAtlantic = new Processor("atlantic-test-data.csv");
+        processorNortheast = new Processor("northeast-data.csv");
 
         // Construct graph associated with CellTower objects for routing
-        ICellNetwork cellNetwork = new CellNetwork(processor);
-
-        Person person1 = new Person("John", "Verizon", 39.38, -74.45, processor.getRoot()); //This Test case works
-
-        // get person1's cell tower id
-        Assert.assertTrue(person1.getCanConnect());
-        // Assert.assertEquals(15052, person1.getPersonCellTower().getId());
-        System.out.println("finished person 1");
-
-
-        Person person2 = new Person("Alice", "AT&T", 40.92, -80.52, processor.getRoot());
-
-        // get person 2's cell tower id
-        Assert.assertTrue(person2.getCanConnect());
-        // Assert.assertEquals(34696, person2.getPersonCellTower().getId());
-        System.out.println("finished person 2");
-
-        // initialize path object and then calculate path with it
-        Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetwork);
-        path.calculatePath();
-        System.out.println(path);
+        cellNetworkAtlantic = new CellNetwork(processorAtlantic);
+        cellNetworkNortheast = new CellNetwork(processorNortheast);
     }
-    
+
     @Test
-    public void testProcessorNotWorking() {
-        // Create processor object
-        // On initialization, the processor object
-        // - reads a CSV file
-        // - constructs the quad tree object corresponding to the region
-        Processor processor = new Processor("northeast-data.csv");
+    public void testProcessorTowerListSize() {
+        assertEquals(11, processorAtlantic.getTowerList().size());
+        assertEquals(11, processorAtlantic.getTowerMap().size());
 
-        // Construct graph associated with CellTower objects for routing
-        ICellNetwork cellNetwork = new CellNetwork(processor);
-
-
-        Person person1 = new Person("John", "Verizon", 35, -84, processor.getRoot()); //New Haven, CT
-        // Person person1 = new Person("John", "Verizon", 40.71, -70, processor.getRoot()); //New Haven, CT
-
-        // get person1's cell tower id
-        Assert.assertTrue(person1.getCanConnect());
-        // Assert.assertEquals(15052, person1.getPersonCellTower().getId());
-        System.out.println("finished person 1");
-
-
-        Person person2 = new Person("Alice", "AT&T", 49, -70, processor.getRoot());
-        // Person person2 = new Person("Alice", "AT&T", 40.1, -84, processor.getRoot());
-
-        // get person 2's cell tower id
-        Assert.assertTrue(person2.getCanConnect());
-        // Assert.assertEquals(34696, person2.getPersonCellTower().getId());
-        System.out.println("finished person 2");
-
-        // initialize path object and then calculate path with it
-        Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetwork);
-        path.calculatePath();
-        System.out.println(path);
+        assertEquals(1385, processorNortheast.getTowerMap().size());
+        assertEquals(1385, processorNortheast.getTowerList().size());
     }
 
 
     @Test
-    public void testProcessorWithAtlanticSet() {
-        // Create processor object
-        // On initialization, the processor object
-        // - reads a CSV file
-        // - constructs the quad tree object corresponding to the region
-        Processor processor = new Processor("atlantic-test-data.csv");
-
-        // Construct graph associated with CellTower objects for routing
-        ICellNetwork cellNetwork = new CellNetwork(processor);
-
-        Person person1 = new Person("John", "Verizon", 39.38, -74.45, processor.getRoot()); //This Test case works
-
-        // get person1's cell tower id
+    public void testProcessorOutputNYandPhilly() {
+        Person person1 = new Person("John", "Verizon", 40.71, -74.01, processorNortheast.getRoot());
         Assert.assertTrue(person1.getCanConnect());
-        // Assert.assertEquals(15052, person1.getPersonCellTower().getId());
-        System.out.println("finished person 1");
+        Assert.assertEquals(314, person1.getPersonCellTower().getId());
 
-
-        Person person2 = new Person("Alice", "AT&T", 39.58, -74.87, processor.getRoot());
-
-        // get person 2's cell tower id
+        Person person2 = new Person("Alice", "AT&T", 39.95, -75.17, processorNortheast.getRoot());
         Assert.assertTrue(person2.getCanConnect());
-        // Assert.assertEquals(34696, person2.getPersonCellTower().getId());
-        System.out.println("finished person 2");
+        Assert.assertEquals(912, person2.getPersonCellTower().getId());
 
         // initialize path object and then calculate path with it
-        Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetwork);
-        path.calculatePath();
-        System.out.println(path);
+        Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetworkNortheast);
+        List<CellTower> towerList = path.calculatePath();
+        Assert.assertEquals(13, towerList.size());
     }
-    
+
+
+    @Test
+    public void testProcessorOutputTopLeftAndBotRight() {
+        Person person1 = new Person("John", "Verizon", 49, -84, processorNortheast.getRoot());
+        Assert.assertTrue(person1.getCanConnect());
+        Assert.assertEquals(865, person1.getPersonCellTower().getId());
+
+        Person person2 = new Person("Alice", "AT&T", 35, -70, processorNortheast.getRoot());
+        Assert.assertTrue(person2.getCanConnect());
+        Assert.assertEquals(451, person2.getPersonCellTower().getId());
+
+        // initialize path object and then calculate path with it
+        Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetworkNortheast);
+        List<CellTower> towerList = path.calculatePath();
+        Assert.assertEquals(74, towerList.size());
+    }
+
+
+    @Test
+    public void testProcessorOutputBotLeftAndTopRight() {
+        Person person1 = new Person("John", "Verizon", 35, -84, processorNortheast.getRoot());
+        Assert.assertTrue(person1.getCanConnect());
+        Assert.assertEquals(972, person1.getPersonCellTower().getId());
+
+        Person person2 = new Person("Alice", "AT&T", 49, -70, processorNortheast.getRoot());
+        Assert.assertTrue(person2.getCanConnect());
+        Assert.assertEquals(160, person2.getPersonCellTower().getId());
+
+        // initialize path object and then calculate path with it
+        Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetworkNortheast);
+        List<CellTower> towerList = path.calculatePath();
+        Assert.assertEquals(83, towerList.size());
+    }
 }
