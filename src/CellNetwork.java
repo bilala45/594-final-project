@@ -118,7 +118,7 @@ public class CellNetwork implements ICellNetwork {
         }
 
         // if distance between towers is greater than 100 miles, don't create an edge
-        if (edgeWt > 350) {
+        if (edgeWt > 500) {
             return -1;
         }
 
