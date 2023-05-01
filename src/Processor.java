@@ -123,7 +123,11 @@ public class Processor implements IProcessor {
 
         // initialize scanner
         Scanner scanner = new Scanner(System.in);
-
+        
+        System.out.println("---  ✆ MAKING A CALL BETWEEN TWO PEOPLE IN THE NORTHEAST US ✆ ---\n");
+        System.out.println("(enter latitudes and longitudes within NY, NJ, PA, MA, RI)");
+        System.out.println("------------------------------------------- \n");
+        
         // get person 1's name, coordinate and carrier and initialize corresponding Person object
         System.out.println("Enter Person 1's name: ");
         String name = scanner.nextLine();
