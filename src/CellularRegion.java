@@ -49,6 +49,32 @@ public class CellularRegion implements ICellularRegion {
     }
 
 
+    // Getters for each child
+    public Coordinate getTopLeft() {
+        return topLeft;
+    }
+
+    public Coordinate getBotRight() {
+        return botRight;
+    }
+
+    public ICellularRegion getTopLeftSq() {
+        return topLeftSq;
+    }
+
+    public ICellularRegion getTopRightSq() {
+        return topRightSq;
+    }
+
+    public ICellularRegion getBotRightSq() {
+        return botRightSq;
+    }
+
+    public ICellularRegion getBotLeftSq() {
+        return botLeftSq;
+    }
+
+
     /**
      * Divide this cellular region into 4 sub-regions
      */
