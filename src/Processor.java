@@ -47,7 +47,22 @@ public class Processor implements IProcessor {
         //initialize cellular region and subdivide until area has cell towers allocated 
         root = new CellularRegion(ICellularRegion.topLeft, ICellularRegion.botRight, null);
         root.setTowersInRegion(cellTowers);
-        root.subDivide();
+        
+        Queue<CellularRegion> q = new LinkedList<CellularRegion>();
+        
+        q.offer((CellularRegion) root);
+        
+        while (!q.isEmpty()) {
+            
+            CellularRegion curr = q.poll();
+            curr.subDivide();
+            
+            for(ICellularRegion c: curr.children()) {
+                q.offer((CellularRegion) c);
+            }
+            
+        }
+        
 
     }
 
@@ -67,9 +82,13 @@ public class Processor implements IProcessor {
         String csvFilePath = "atlantic-test-data.csv";
         Processor p = new Processor();
         p.readCSVFile(csvFilePath);
+        
+        System.out.println("86");
 
         // build quad tree
         p.buildQuadTree();
+        
+        System.out.println("91");
 
         // build graph
         ICellNetwork cn = new CellNetwork(p);
