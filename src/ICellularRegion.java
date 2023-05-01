@@ -56,6 +56,14 @@ public interface ICellularRegion {
          * @return List of neighboring sub-regions
          */
         public List<ICellularRegion> getSiblings();
+        
+     
+       /**
+        * Getter for parent's region
+        * @return parent of the given region
+        */
+        public ICellularRegion getParent();
+        
 }
 
 

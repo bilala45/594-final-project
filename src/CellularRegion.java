@@ -49,6 +49,7 @@ public class CellularRegion implements ICellularRegion {
     }
 
     // getter for this region's parent
+    @Override
     public ICellularRegion getParent() {
         return parent;
     }
