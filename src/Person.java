@@ -170,11 +170,11 @@ public class Person implements IPerson {
             }
 
             if (!currRegion.isLeaf()) {
-                if (((CellularRegion) currRegion).getTopLeftSq().isCoordinateWithinRegion(currLocation)) {
+                if (((CellularRegion) currRegion).getTopLeftSq() != null && ((CellularRegion) currRegion).getTopLeftSq().isCoordinateWithinRegion(currLocation)) {
                     stack.push(((CellularRegion) currRegion).getTopLeftSq());
-                } else if (((CellularRegion) currRegion).getTopRightSq().isCoordinateWithinRegion(currLocation)) {
+                } else if (((CellularRegion) currRegion).getTopRightSq() != null && ((CellularRegion) currRegion).getTopRightSq().isCoordinateWithinRegion(currLocation)) {
                     stack.push(((CellularRegion) currRegion).getTopRightSq());
-                } else if (((CellularRegion) currRegion).getBotRightSq().isCoordinateWithinRegion(currLocation)) {
+                } else if (((CellularRegion) currRegion).getBotRightSq() != null && ((CellularRegion) currRegion).getBotRightSq().isCoordinateWithinRegion(currLocation)) {
                     stack.push(((CellularRegion) currRegion).getBotRightSq());
                 } else {
                     stack.push(((CellularRegion) currRegion).getBotLeftSq());
@@ -200,6 +200,11 @@ public class Person implements IPerson {
 
     public String getCarrier() {
         return carrier;
+    }
+
+
+    public CellTower getPersonCellTower() {
+        return personCellTower;
     }
 
 }

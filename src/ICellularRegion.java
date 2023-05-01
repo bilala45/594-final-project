@@ -52,6 +52,13 @@ public interface ICellularRegion {
         public List<ICellularRegion> getSiblings();
 
 
+        /**
+         * Get list of towers in region
+         * @return
+         */
+        void setTowersInRegion(List<CellTower> towersinRegion);
+
+
 }
 
 

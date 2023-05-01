@@ -198,6 +198,15 @@ public class CellularRegion implements ICellularRegion {
     public List<CellTower> getTowersInRegion() {
         return towersInRegion;
     }
+    
+    /**
+     * Get list of towers in region
+     * @return
+     */
+    @Override
+    public void setTowersInRegion(List<CellTower> towersinRegion) {
+        this.towersInRegion = towersinRegion;
+    }
 
 
     /**
