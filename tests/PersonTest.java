@@ -56,7 +56,6 @@ public class PersonTest {
         Person p = new Person("Jane","t-mobile", 37.01, -78.001, processor.getRoot());
         assertEquals(37.010, p.getLocation().getLatitude(), 0.001);
         assertEquals(-78.001, p.getLocation().getLongitude(), 0.001);
-        
     }
     
     @Test
@@ -66,10 +65,5 @@ public class PersonTest {
         CellTower ct = p.findNearestCellTower(processor.getRoot());
         assertEquals(34708, ct.getId());
         assertEquals(34708, p.getPersonCellTower().getId());
-        
     }
-    
-    
-    
-
 }
