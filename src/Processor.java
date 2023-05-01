@@ -14,7 +14,6 @@ public class Processor implements IProcessor {
     // root of quad tree
     private ICellularRegion root;
 
-
     /**
      * Processor constructor
      */
