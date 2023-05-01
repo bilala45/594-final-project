@@ -212,7 +212,7 @@ public class CellularRegion implements ICellularRegion {
     @Override
     public boolean isLeaf() {
         // CellularRegion is a leaf if 0 or 1 towers are in the region
-        if (towersInRegion.size() == 0 || towersInRegion.size() == 1) {
+        if (towersInRegion.size() <= 5) {
             return true;
         }
         return false;
