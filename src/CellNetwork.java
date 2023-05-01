@@ -26,7 +26,7 @@ public class CellNetwork implements ICellNetwork {
         IdToVertexMap = new HashMap<>();
 
         // Initialize graph with number of vertices matching the number of cell towers
-        cellNetworkGraph = new GraphM();
+        cellNetworkGraph = new GraphL();
         cellNetworkGraph.init(IdToCellTowerMap.size());
 
         // assign vertices to graph
@@ -84,9 +84,12 @@ public class CellNetwork implements ICellNetwork {
                     // calculate edge weight between both towers
                     int edgeWt = computeEdgeWeight(v1, v2);
 
-                    // add edge in both directions since networks are bidirectional
-                    cellNetworkGraph.addEdge(i, j, edgeWt);
-                    cellNetworkGraph.addEdge(j, i, edgeWt);
+                    // create edge if distance between towers is less than 100 miles
+                    if (edgeWt != -1) {
+                        // add edge in both directions since networks are bidirectional
+                        cellNetworkGraph.addEdge(i, j, edgeWt);
+                        cellNetworkGraph.addEdge(j, i, edgeWt);
+                    }
                 }
             }
         }
@@ -107,11 +110,16 @@ public class CellNetwork implements ICellNetwork {
         int edgeWt = ICellNetwork.computeNauticalMiles(tower1, tower2);
 
         // square distance calculated to penalize cell towers that are further apart
-        edgeWt = (int) Math.pow(edgeWt, 1.1);
+        edgeWt = (int) Math.pow(edgeWt, 2);
 
         // add penalty to distance if cell towers are licensed to different providers
         if (!tower1.getLicense().equals(tower2.getLicense())) {
             edgeWt = (int) (edgeWt * 1.05);
+        }
+
+        // if distance between towers is greater than 100 miles, don't create an edge
+        if (edgeWt > 350) {
+            return -1;
         }
 
         return edgeWt;

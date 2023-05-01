@@ -32,6 +32,9 @@ public class Path implements IPath {
         // stores path from source to destination vertex
         shortestPath = new ArrayList<>();
 
+
+        System.out.println("number of edges: " + ((GraphL) graph).edgeCount());
+
 //        int[][] graphm = ((GraphM) graph).getMatrix();
 //        for (int i = 0 ; i < graph.nodeCount() ; i++) {
 //            System.out.print(((CellTower) graph.getValue(i)).getId() + "\t");
@@ -81,7 +84,7 @@ public class Path implements IPath {
         // iterate until pq is empty
         while (!pq.isEmpty()) {
             int node = pq.poll();
-            System.out.println(graph.getValue(node)); //Added this print
+            // System.out.println(graph.getValue(node)); //Added this print
             // iterate through node's neighbors
             for (int neighbor : graph.neighbors(node)) {
                 // update shortest of neighbor if path to neighbor is shorter
