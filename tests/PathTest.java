@@ -1,3 +1,4 @@
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class PathTest {
 
-    private Path path;
+    private ICellNetwork cellNetwork;
 
     @Before
     public void setUp() {
@@ -18,14 +19,33 @@ public class PathTest {
         Processor processor = new Processor("atlantic-test-data.csv");
 
         // Construct graph associated with CellTower objects for routing
-        ICellNetwork cellNetwork = new CellNetwork(processor);
-
-        path = new Path(15052, 34696, cellNetwork);
+        cellNetwork = new CellNetwork(processor);
     }
 
     @Test
-    public void testPath() {
+    public void testPathWithDifferentCellTowerIds() {
+        // path between different cell towers
+        Path path = new Path(15052, 34696, cellNetwork);
         List<CellTower> towerPath = path.calculatePath();
+        Assert.assertEquals(7, towerPath.size());
         System.out.println(path);
+    }
+
+
+    @Test
+    public void testPathWithSameCellTowerIds() {
+        // no path between same cell towers
+        Path path = new Path(15052, 15052, cellNetwork);
+        List<CellTower> towerPath = path.calculatePath();
+        Assert.assertEquals(0, towerPath.size());
+    }
+
+
+    @Test
+    public void testToString() {
+        // no path between same cell towers
+        Path path = new Path(15052, 15052, cellNetwork);
+        String string = path.toString();
+        Assert.assertEquals("Start:\nEnd:\n", string);
     }
 }

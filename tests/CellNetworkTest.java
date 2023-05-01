@@ -66,4 +66,16 @@ public class CellNetworkTest {
         int edgeWt = cellNetwork.computeEdgeWeight(tower1, tower2);
         Assert.assertEquals(-1, edgeWt);
     }
+
+    @Test
+    public void testComputeEdgeWeightValid() {
+        // create two cell tower objects
+        CellTower tower1 = new CellTower(10, 39.38, 74.45,
+                "Verizon", "", "", "", "");
+        CellTower tower2 = new CellTower(11, 39.52, 74.49,
+                "AT&T", "", "", "", "");
+
+        int edgeWt = cellNetwork.computeEdgeWeight(tower1, tower2);
+        Assert.assertEquals(85, edgeWt);
+    }
 }

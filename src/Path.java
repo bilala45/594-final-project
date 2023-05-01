@@ -32,9 +32,6 @@ public class Path implements IPath {
         // stores path from source to destination vertex
         shortestPath = new ArrayList<>();
 
-
-        System.out.println("number of edges: " + ((GraphL) graph).edgeCount());
-
 //        int[][] graphm = ((GraphM) graph).getMatrix();
 //        for (int i = 0 ; i < graph.nodeCount() ; i++) {
 //            System.out.print(((CellTower) graph.getValue(i)).getId() + "\t");
