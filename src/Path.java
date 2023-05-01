@@ -81,6 +81,7 @@ public class Path implements IPath {
         // iterate until pq is empty
         while (!pq.isEmpty()) {
             int node = pq.poll();
+            System.out.println(graph.getValue(node)); //Added this print
             // iterate through node's neighbors
             for (int neighbor : graph.neighbors(node)) {
                 // update shortest of neighbor if path to neighbor is shorter

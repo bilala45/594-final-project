@@ -107,7 +107,7 @@ public class CellNetwork implements ICellNetwork {
         int edgeWt = ICellNetwork.computeNauticalMiles(tower1, tower2);
 
         // square distance calculated to penalize cell towers that are further apart
-        edgeWt = (int) Math.pow(edgeWt, 2);
+        edgeWt = (int) Math.pow(edgeWt, 1.1);
 
         // add penalty to distance if cell towers are licensed to different providers
         if (!tower1.getLicense().equals(tower2.getLicense())) {
