@@ -206,5 +206,9 @@ public class Person implements IPerson {
     public CellTower getPersonCellTower() {
         return personCellTower;
     }
+    
+    public Coordinate getLocation() {
+        return this.location;
+    }
 
 }
