@@ -28,6 +28,23 @@ public class Coordinate {
         return longitude;
     }
 
+
+    /**
+     * Setter for latitude
+     * @param latitude
+     */
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * Setter for longitude
+     * @param longitude
+     */
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     
     public String toString() {
         return "lat: " + this.latitude + ", long: " + this.longitude;

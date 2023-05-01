@@ -62,7 +62,7 @@ public class ProcessorTest {
         ICellNetwork cellNetwork = new CellNetwork(processor);
 
 
-        Person person1 = new Person("John", "Verizon", 41.349, -72.97, processor.getRoot()); //New Haven, CT
+        Person person1 = new Person("John", "Verizon", 48, -74.00, processor.getRoot()); //New Haven, CT
 
         // get person1's cell tower id
         Assert.assertTrue(person1.getCanConnect());
@@ -70,7 +70,7 @@ public class ProcessorTest {
         System.out.println("finished person 1");
 
 
-        Person person2 = new Person("Alice", "AT&T", 40.92, -80.52, processor.getRoot());
+        Person person2 = new Person("Alice", "AT&T", 36, -75.16, processor.getRoot());
 
         // get person 2's cell tower id
         Assert.assertTrue(person2.getCanConnect());

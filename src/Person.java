@@ -219,7 +219,9 @@ public class Person implements IPerson {
             }
 
             // set current location to center of sibling with min distance
-            currLocation = siblingCenter[minIndex];
+            //currLocation = siblingCenter[minIndex];
+            currLocation.setLatitude(siblingCenter[minIndex].getLatitude());
+            currLocation.setLongitude(siblingCenter[minIndex].getLongitude());
             // return region associated with min index
             return siblings.get(minIndex);
 //        }
