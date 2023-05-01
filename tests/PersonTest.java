@@ -6,7 +6,6 @@ import org.junit.Test;
 public class PersonTest {
 
     private Processor processor;
-    private ICellNetwork cellNetwork;
 
     @Before
     public void setUp() {
@@ -15,8 +14,6 @@ public class PersonTest {
         // - reads a CSV file
         // - constructs the quad tree object corresponding to the region
         processor = new Processor("atlantic-test-data.csv");
-        cellNetwork = new CellNetwork(processor);
-        
     }
 
     @Test
