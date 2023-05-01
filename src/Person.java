@@ -135,9 +135,25 @@ public class Person implements IPerson {
                 // TODO would have to change this so that we call some method that finds the
                 // TODO cell tower closest to us once we get to a sub-region with a small enough number of cell towers
                 // return cell tower in region if this region contains a single cell tower
-                if (currRegion.getTowersInRegion().size() == 1) {
-                    return currRegion.getTowersInRegion().get(0);
+                if (currRegion.getTowersInRegion().size() > 0) {
+                    int index = -1;
+                    int minimumDist = Integer.MAX_VALUE;
+                    
+                    List<CellTower> towers = currRegion.getTowersInRegion();
+                    for (int i = 0; i < towers.size(); i ++) {
+                        Coordinate newCord = new Coordinate(towers.get(i).getLat(), towers.get(i).getLong());
+                        
+                        int tempDist = this.computeNauticalMiles(currLocation, newCord);
+                        if (tempDist < minimumDist) {
+                            minimumDist = tempDist;
+                            index = i;
+                        }
+                    }
+
+                    return towers.get(index);
                 }
+                
+                
                 // TODO this logic should still be fine with the change but it would probably work better
                 // TODO because it would be more of an edge case, so we would almost always have siblings with leafs
                 // current region is a leaf but no cell towers are in the region
