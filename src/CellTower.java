@@ -113,11 +113,8 @@ public class CellTower implements ICellTower {
     
     @Override
     public String toString() {
-        String out = "";
-        
-        out  += "\t⧋  \t\n" + "id: " + id + " at " + city + ", " + state;
-        
-        return out;
-        
+        return "\t⧋ \t" + "Tower " + id + " at " + city.toUpperCase() + ", " + state;
+        // out  += "\t⧋  \t\n" + "id: " + id + " at " + city.toUpperCase() + ", " + state;
+        // return out;
     }
 }

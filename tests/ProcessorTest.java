@@ -51,6 +51,7 @@ public class ProcessorTest {
         Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetworkNortheast);
         List<CellTower> towerList = path.calculatePath();
         Assert.assertEquals(13, towerList.size());
+        System.out.println(path);
     }
 
 
@@ -68,6 +69,7 @@ public class ProcessorTest {
         Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetworkNortheast);
         List<CellTower> towerList = path.calculatePath();
         Assert.assertEquals(74, towerList.size());
+        System.out.println(path);
     }
 
 
@@ -85,5 +87,6 @@ public class ProcessorTest {
         Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetworkNortheast);
         List<CellTower> towerList = path.calculatePath();
         Assert.assertEquals(83, towerList.size());
+        System.out.println(path);
     }
 }

@@ -119,11 +119,13 @@ public class Path implements IPath {
 
     @Override
     public String toString() {
-        String path = "Start:\n";
-        for (CellTower object : shortestPath) {
-            path = path + object + "\n";
+        String path = "\n################ ROUTING CALL ################\n";
+        path += "Start\n";
+        for (int i = 0 ; i < shortestPath.size() - 1 ; i++) {
+            path = path + shortestPath.get(i) + "\n\t|\n";
         }
-        path += "End:\n";
+        path = path + shortestPath.get(shortestPath.size() - 1) + "\n";
+        path += "End";
         return path;
     }
 }
