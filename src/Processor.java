@@ -116,7 +116,7 @@ public class Processor implements IProcessor {
         // On initialization, the processor object
         // - reads a CSV file
         // - constructs the quad tree object corresponding to the region
-        Processor processor = new Processor("atlantic-test-data.csv");
+        Processor processor = new Processor("northeast-data.csv");
 
         // Construct graph associated with CellTower objects for routing
         ICellNetwork cellNetwork = new CellNetwork(processor);
@@ -174,6 +174,7 @@ public class Processor implements IProcessor {
         if (person1.getCanConnect() && person2.getCanConnect()) {
             // compute cell tower path between Person 1 and Person 2 and print path
             Path path = new Path(person1.getPersonCellTower().getId(), person2.getPersonCellTower().getId(), cellNetwork);
+            path.calculatePath();
             System.out.println(path);
         } else {
             System.out.println("This call could not be directed. Please try again.");

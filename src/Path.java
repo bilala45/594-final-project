@@ -121,10 +121,14 @@ public class Path implements IPath {
     public String toString() {
         String path = "\n################ ROUTING CALL ################\n";
         path += "Start\n";
-        for (int i = 0 ; i < shortestPath.size() - 1 ; i++) {
-            path = path + shortestPath.get(i) + "\n\t|\n";
+        if (shortestPath.size() > 0) {
+            for (int i = 0 ; i < shortestPath.size() - 1 ; i++) {
+                path = path + shortestPath.get(i) + "\n\t|\n";
+            }
+            path = path + shortestPath.get(shortestPath.size() - 1) + "\n";
+        } else {
+            path = path + graph.getValue(idToVertexMap.get(cellTowerId1)) + "\n";
         }
-        path = path + shortestPath.get(shortestPath.size() - 1) + "\n";
         path += "End";
         return path;
     }
